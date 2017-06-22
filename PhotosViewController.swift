@@ -14,11 +14,15 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
     
     @IBOutlet weak var photoTable: UITableView!
     
+    
     var posts: [[String: Any]] = []
+    
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let refreshControl = UIRefreshControl()
         
         photoTable.delegate = self // what's this for and why didn't we use it in flix?
         photoTable.dataSource = self
@@ -38,7 +42,7 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
                 print (error.localizedDescription)
             } else if let data = data,
                 let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                print(dataDictionary)
+//                print(dataDictionary)
                 
                 let responseDictionary = dataDictionary["response"] as! [String:Any]
                 
@@ -53,7 +57,11 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
         task.resume()
         // Do any additional setup after loading the view.
     }
-
+    
+//    func refreshControlAction(_ refreshControl: UIRefreshControl) {
+//        
+//    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -82,15 +90,24 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 
-    /*
+
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        
+        let vc = segue.destination as! PhotoDetailsViewController
+        let cell = sender as! PhotoCell
+//        let indexPath = tableView.indexPath(for: cell)!
+        vc.image = cell.imageDisplay.image
+        
     }
-    */
+
 
 }
